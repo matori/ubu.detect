@@ -25,7 +25,6 @@ gulp.task "coffee", ->
     .pipe gulpif isDev, sourcemaps.write()
     .pipe gulpif isProduction, stripDebug()
     .pipe gulp.dest distDir
-    .pipe gulpif isDev, gulp.dest "./example"
 
 gulp.task "lint", ->
     gulp.src "#{distDir}/#{mainFileName}.js"
