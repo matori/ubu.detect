@@ -244,7 +244,7 @@ detect = ->
                 if screen.height is 240 and screen.width is 320
                     data.platform.ios = false
                     data.platform.iphone = false
-                    data.platform.nintendoNew3ds = true
+                    data.platform.newNintendo3ds = true
                     data.browser.safari = false
                     data.browser.nintendoBrowser = true
         else

@@ -300,7 +300,7 @@
           if (screen.height === 240 && screen.width === 320) {
             data.platform.ios = false;
             data.platform.iphone = false;
-            data.platform.nintendoNew3ds = true;
+            data.platform.newNintendo3ds = true;
             data.browser.safari = false;
             data.browser.nintendoBrowser = true;
           }
