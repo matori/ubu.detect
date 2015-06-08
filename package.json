@@ -1,0 +1,43 @@
+{
+  "name": "ubu.detect",
+  "version": "1.0.0",
+  "description": "Browser detection and a little something extra.",
+  "main": "dist/ubu.detect.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "matori <pnr.matori@gmail.com> (http://matori.org/)",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.7.6",
+    "coffee-script": "^1.9.3",
+    "gulp": "^3.8.11",
+    "gulp-coffee": "^2.3.1",
+    "gulp-eslint": "^0.13.2",
+    "gulp-if": "^1.2.5",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-strip-debug": "^1.0.2",
+    "gulp-util": "^3.0.4"
+  },
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {
+    "browser-sync": "^2.7.6",
+    "gulp": "^3.8.11",
+    "gulp-coffee": "^2.3.1",
+    "gulp-eslint": "^0.13.2",
+    "gulp-if": "^1.2.5",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-strip-debug": "^1.0.2",
+    "gulp-util": "^3.0.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matori/ubu.detect"
+  },
+  "bugs": {
+    "url": "https://github.com/matori/ubu.detect/issues"
+  },
+  "homepage": "https://github.com/matori/ubu.detect"
+}

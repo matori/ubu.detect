@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Detection result</title>
+<style>
+    body {
+        margin: 0;
+        text-align: center;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        font-size: 14px;
+        font-weight: normal;
+        text-align: left;
+    }
+
+    table {
+        margin: auto;
+        border-collapse: collapse;
+        color: slategray;
+    }
+
+    th,
+    td {
+        padding: 0.5em;
+        line-height: 1;
+    }
+
+    .detected {
+        background-color: azure;
+        color: tomato;
+    }
+
+    .detected th,
+    .detected td {
+        font-weight: bolder;
+    }
+</style>
+</head>
+<body>
+
+<h1>Detection result</h1>
+<div id="result"></div>
+
+<script src="../dist/ubu.detect.js"></script>
+<script>
+    (function () {
+        window.hasOwnProperty = window.hasOwnProperty || Object.prototype.hasOwnProperty;
+        var text = function (el, value) {
+            if ("textContent" in el) {
+                el.textContent = value;
+            } else {
+                el.innerText = value;
+            }
+        };
+        var result = document.getElementById("result");
+        var detected = ubu.detect;
+        var fragment = document.createDocumentFragment();
+        var k;
+        for (k in detected) {
+            if (detected.hasOwnProperty(k)) {
+                var title = document.createElement("h2");
+                var table = document.createElement("table");
+                var tbody = document.createElement("tbody");
+                var kc;
+
+                text(title, k);
+
+                for (kc in detected[k]) {
+                    if(detected[k].hasOwnProperty(kc)) {
+                        var tr = document.createElement("tr");
+                        var th = document.createElement("th");
+                        var td = document.createElement("td");
+
+                        if (detected[k][kc] === true) {
+                            tr.setAttribute("class", "detected");
+                        }
+
+                        if ((kc === "ieVer" || kc === "ieMode") && detected[k][kc] > 0) {
+                            tr.setAttribute("class", "detected");
+                        }
+
+                        text(th, kc);
+                        text(td, detected[k][kc]);
+                        tr.appendChild(th);
+                        tr.appendChild(td);
+                        tbody.appendChild(tr);
+                    }
+                }
+
+                table.appendChild(tbody);
+                fragment.appendChild(title);
+                fragment.appendChild(table);
+            }
+            result.appendChild(fragment);
+        }
+    })();
+</script>
+</body>
+</html>
