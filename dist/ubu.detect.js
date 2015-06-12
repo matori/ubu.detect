@@ -1,5 +1,14 @@
 (function() {
   "use strict";
+
+  /*!
+   * ubu.detect v1.0.0
+   * https://github.com/matori/ubu.detect
+   *
+   * Copyright (c) 2015 Matori
+   * Released under the MIT license
+   * http://opensource.org/licenses/mit-license.php
+   */
   var GLOBAL_NS, MODULE_NAME, detect;
 
   GLOBAL_NS = "ubu";
