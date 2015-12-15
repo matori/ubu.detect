@@ -16,7 +16,7 @@
   MODULE_NAME = "detect";
 
   detect = function() {
-    var checkDevice, checkPf, checkPfSpecificBrowser, data, detectBrowser, detectPlatform, getIeDetail, getWebkitVer, hasDocumentMode, hasWindowOpera, isAndroid, isAndroidWebkit, isBlackBerry, isBlackBerryMidp, isBlackBerryWebkit, isChrome, isEdge, isFirefox, isFirefoxOs, isFreeBsd, isIe, isIosDevice, isLinux, isMac, isNintendoBrowser, isNintendoDs, isNintendoOpera, isOpenBsd, isOperaPresto, isPlayStation, isPsBrowser, isSafari, isWii, isWindows, isXbox, platform, platformString, testPf, testUa, testVendor, uaString, vendorString;
+    var checkDevice, checkPf, checkPfSpecificBrowser, data, detectBrowser, detectPlatform, getChromeVer, getIeDetail, getWebkitVer, hasDocumentMode, hasWindowOpera, isAndroid, isAndroidChromeWebView, isAndroidWebkit, isBlackBerry, isBlackBerryMidp, isBlackBerryWebkit, isChrome, isEdge, isFirefox, isFirefoxOs, isFreeBsd, isIe, isIosDevice, isLinux, isMac, isNintendoBrowser, isNintendoDs, isNintendoOpera, isOpenBsd, isOperaPresto, isPlayStation, isPsBrowser, isSafari, isWii, isWindows, isXbox, platform, platformString, testPf, testUa, testVendor, uaString, vendorString;
     uaString = "userAgent" in navigator && navigator.userAgent.toLowerCase() || "";
     vendorString = "vendor" in navigator && navigator.vendor.toLowerCase() || "";
     platform = "platform" in navigator && navigator.platform;
@@ -33,13 +33,15 @@
         chrome: false,
         safari: false,
         operaPresto: false,
+        androidChromeWebView: false,
         androidWebkit: false,
         blackberryMidp: false,
         blackberryWebkit: false,
         nintendoOpera: false,
         nintendoBrowser: false,
         psBrowser: false,
-        unknownWebkitVer: 0,
+        chromeVer: 0,
+        webkitVer: 0,
         unknownWebkit: false,
         unknown: false
       },
@@ -51,8 +53,6 @@
         ios: false,
         blackberry: false,
         firefoxOs: false,
-        freebsd: false,
-        openbsd: false,
         iphone: false,
         ipad: false,
         ipod: false,
@@ -113,9 +113,18 @@
       }
       return result;
     };
+    getChromeVer = function() {
+      var chromeVer;
+      chromeVer = uaString.match(/chrome\/(([0-9]{1,3})[\.\d]+?)\s/);
+      if (chromeVer) {
+        return parseFloat(chromeVer[1]);
+      } else {
+        return 0;
+      }
+    };
     getWebkitVer = function() {
       var webkitVer;
-      webkitVer = uaString.match(/applewebkit\/(([1-9]{3,})(\.\d+)?)\s/);
+      webkitVer = uaString.match(/applewebkit\/(([0-9]{3,})(\.\d+)?)\s/);
       if (webkitVer) {
         return parseFloat(webkitVer[1]);
       } else {
@@ -214,14 +223,17 @@
       }
       return "";
     };
+    isAndroidChromeWebView = function() {
+      return data.platform.android && data.browser.chrome && testUa(/(version\/[\d\.]{3,})\s/);
+    };
     isAndroidWebkit = function() {
-      if (data.platform.android && !data.browser.chrome && getWebkitVer() < 537) {
+      if (data.platform.android && !data.browser.chrome && data.browser.webkitVer < 537) {
         return "androidWebkit";
       }
       return "";
     };
     isBlackBerryWebkit = function() {
-      if (data.platform.blackberry && getWebkitVer() > 534) {
+      if (data.platform.blackberry && data.browser.webkitVer > 534) {
         return "blackberryWebkit";
       }
       return "";
@@ -288,8 +300,10 @@
       }
     };
     detectBrowser = function() {
-      var detail, detection, i, len, ref, result, webkitVer;
+      var detail, detection, i, len, ref, result;
       result = "";
+      data.browser.chromeVer = getChromeVer();
+      data.browser.webkitVer = getWebkitVer();
       ref = [isIe, isEdge, isFirefox, isSafari, isChrome, isOperaPresto, isAndroidWebkit, isBlackBerryWebkit, isBlackBerryMidp, isPsBrowser, isNintendoBrowser, isNintendoOpera];
       for (i = 0, len = ref.length; i < len; i++) {
         detection = ref[i];
@@ -305,6 +319,9 @@
           data.browser.ieVer = detail.ver;
           data.browser.ieMode = detail.mode;
         }
+        if (result === "chrome") {
+          data.browser.androidChromeWebView = isAndroidChromeWebView();
+        }
         if (result === "safari" && data.platform.iphone) {
           if (screen.height === 240 && screen.width === 320) {
             data.platform.ios = false;
@@ -315,10 +332,8 @@
           }
         }
       } else {
-        webkitVer = getWebkitVer();
-        if (webkitVer) {
+        if (data.browser.webkitVer) {
           data.browser.unknownWebkit = true;
-          data.browser.unknownWebkitVer = webkitVer;
         } else {
           data.browser.unknown = true;
         }

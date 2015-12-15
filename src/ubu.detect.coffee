@@ -30,13 +30,15 @@ detect = ->
             chrome: false
             safari: false
             operaPresto: false
+            androidChromeWebView: false
             androidWebkit: false
             blackberryMidp: false
             blackberryWebkit: false
             nintendoOpera: false
             nintendoBrowser: false
             psBrowser: false
-            unknownWebkitVer: 0
+            chromeVer: 0
+            webkitVer: 0
             unknownWebkit: false
             unknown: false
         platform:
@@ -47,8 +49,6 @@ detect = ->
             ios: false
             blackberry: false
             firefoxOs: false
-            freebsd: false
-            openbsd: false
             iphone: false
             ipad: false
             ipod: false
@@ -97,8 +97,12 @@ detect = ->
                 break
         result
 
+    getChromeVer = ->
+        chromeVer = uaString.match /chrome\/(([0-9]{1,3})[\.\d]+?)\s/
+        return if chromeVer then parseFloat chromeVer[1] else 0
+
     getWebkitVer = ->
-        webkitVer = uaString.match /applewebkit\/(([1-9]{3,})(\.\d+)?)\s/
+        webkitVer = uaString.match /applewebkit\/(([0-9]{3,})(\.\d+)?)\s/
         return if webkitVer then parseFloat webkitVer[1] else 0
 
     isAndroid = ->
@@ -171,13 +175,16 @@ detect = ->
             return "operaPresto"
         ""
 
+    isAndroidChromeWebView = ->
+        data.platform.android and data.browser.chrome and testUa(/(version\/[\d\.]{3,})\s/)
+
     isAndroidWebkit = ->
-        if data.platform.android and not data.browser.chrome and getWebkitVer() < 537
+        if data.platform.android and not data.browser.chrome and data.browser.webkitVer < 537
             return "androidWebkit"
         ""
 
     isBlackBerryWebkit = ->
-        if data.platform.blackberry and getWebkitVer() > 534
+        if data.platform.blackberry and data.browser.webkitVer > 534
             return "blackberryWebkit"
         ""
 
@@ -234,6 +241,8 @@ detect = ->
 
     detectBrowser = ->
         result = ""
+        data.browser.chromeVer = getChromeVer()
+        data.browser.webkitVer = getWebkitVer()
         for detection in [
             isIe, isEdge, isFirefox, isSafari, isChrome, isOperaPresto,
             isAndroidWebkit
@@ -249,6 +258,8 @@ detect = ->
                 detail = getIeDetail()
                 data.browser.ieVer = detail.ver
                 data.browser.ieMode = detail.mode
+            if result is "chrome"
+                data.browser.androidChromeWebView = isAndroidChromeWebView()
             if result is "safari" and data.platform.iphone
                 if screen.height is 240 and screen.width is 320
                     data.platform.ios = false
@@ -257,10 +268,8 @@ detect = ->
                     data.browser.safari = false
                     data.browser.nintendoBrowser = true
         else
-            webkitVer = getWebkitVer()
-            if webkitVer
+            if data.browser.webkitVer
                 data.browser.unknownWebkit = true
-                data.browser.unknownWebkitVer = webkitVer
             else
                 data.browser.unknown = true
         return
