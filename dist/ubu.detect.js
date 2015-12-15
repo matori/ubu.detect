@@ -61,6 +61,9 @@
         newNintendo3ds: false,
         nintendoWii: false,
         nintendoWiiU: false,
+        ps4: false,
+        ps3: false,
+        psp: false,
         xbox: false,
         unknown: false
       },
